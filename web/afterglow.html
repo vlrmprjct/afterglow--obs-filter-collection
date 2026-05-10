@@ -1,0 +1,527 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+
+    <head>
+        <meta charset="UTF-8" />
+        <title>AfterGlow CTRL</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background: #111;
+                color: #eee;
+                font-family: 'Segoe UI', sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px 20px;
+                min-height: 100vh;
+                max-width: 1600px;
+                margin: 0 auto;
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+                margin-bottom: 6px;
+                color: #f90;
+                letter-spacing: 2px;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+                color: #666;
+                margin-bottom: 30px;
+            }
+
+            .panel {
+                background: #1c1c1c;
+                border: 1px solid #333;
+                border-radius: 10px;
+                padding: 20px;
+                width: 100%;
+                max-width: 560px;
+                margin-bottom: 20px;
+            }
+
+            .panel h2 {
+                font-size: 0.85rem;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 14px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .panel h2 a {
+                font-size: 0.75rem;
+                color: #555;
+                text-decoration: none;
+                text-transform: none;
+                letter-spacing: 0;
+                cursor: pointer;
+            }
+
+            .panel h2 a:hover {
+                color: #f90;
+            }
+
+            .row {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 10px;
+                align-items: center;
+            }
+
+            label {
+                font-size: 0.8rem;
+                color: #aaa;
+                width: 110px;
+                flex-shrink: 0;
+            }
+
+            input[type="text"],
+            input[type="password"],
+            input[type="number"] {
+                flex: 1;
+                background: #222;
+                border: 1px solid #444;
+                border-radius: 6px;
+                color: #eee;
+                padding: 6px 10px;
+                font-size: 0.85rem;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: #f90;
+            }
+
+            button {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-radius: 8px;
+                background: #f90;
+                color: #111;
+                font-weight: bold;
+                font-size: 0.9rem;
+                cursor: pointer;
+                margin-top: 6px;
+                transition: background 0.2s;
+            }
+
+            button:hover {
+                background: #ffb733;
+            }
+
+            button:disabled {
+                background: #555;
+                color: #888;
+                cursor: default;
+            }
+
+            .status {
+                font-size: 0.78rem;
+                margin-top: 10px;
+                padding: 6px 10px;
+                border-radius: 6px;
+                text-align: center;
+            }
+
+            .status.ok {
+                background: #1a3a1a;
+                color: #4c4;
+            }
+
+            .status.err {
+                background: #3a1a1a;
+                color: #c44;
+            }
+
+            .status.info {
+                background: #1a2a3a;
+                color: #48f;
+            }
+
+            .controls {
+                display: none;
+                width: 100%;
+            }
+
+            .filter-row {
+                background: #1c1c1c;
+                border: 1px solid #333;
+                border-radius: 10px;
+                padding: 18px 20px;
+                margin-bottom: 16px;
+            }
+
+            #params {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 14px;
+            }
+
+            .knob-row {
+                background: #1c1c1c;
+                border: 1px solid #333;
+                border-radius: 10px;
+                padding: 18px 20px;
+            }
+
+            .param-label {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 10px;
+            }
+
+            .param-label span {
+                font-size: 0.88rem;
+                color: #ccc;
+            }
+
+            .param-label .val {
+                font-size: 1.2rem;
+                color: #f90;
+                font-weight: bold;
+            }
+
+            select {
+                width: 100%;
+                background: #222;
+                border: 1px solid #444;
+                border-radius: 6px;
+                color: #eee;
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+
+            select:focus {
+                outline: none;
+                border-color: #f90;
+            }
+
+            input[type="range"] {
+                width: 100%;
+                -webkit-appearance: none;
+                height: 6px;
+                border-radius: 4px;
+                background: #333;
+                outline: none;
+                cursor: pointer;
+            }
+
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #f90;
+                cursor: pointer;
+                transition: background 0.15s;
+            }
+
+            input[type="range"]::-webkit-slider-thumb:hover {
+                background: #ffb733;
+            }
+
+            .toggle-row {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                padding: 14px 0 4px;
+            }
+
+            .toggle-label {
+                font-size: 0.88rem;
+                color: #ccc;
+            }
+
+            .toggle {
+                position: relative;
+                width: 46px;
+                height: 24px;
+                flex-shrink: 0;
+            }
+
+            .toggle input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .toggle-slider {
+                position: absolute;
+                inset: 0;
+                background: #333;
+                border-radius: 24px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+
+            .toggle-slider::before {
+                content: '';
+                position: absolute;
+                left: 3px;
+                top: 3px;
+                width: 18px;
+                height: 18px;
+                background: #888;
+                border-radius: 50%;
+                transition: transform 0.2s, background 0.2s;
+            }
+
+            .toggle input:checked+.toggle-slider {
+                background: #432;
+            }
+
+            .toggle input:checked+.toggle-slider::before {
+                transform: translateX(22px);
+                background: #f90;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>AfterGlow CTRL</h1>
+
+        <div class="panel">
+            <h2>Connection <a id="toggle-conn">&#9660; Settings</a></h2>
+            <div id="conn-body">
+                <div class="row">
+                    <label>Host</label>
+                    <input type="text" id="host" value="localhost" />
+                    <input type="number" id="port" value="4455" style="width:80px;flex:none;" />
+                </div>
+                <div class="row">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="(leave empty if none)" />
+                </div>
+                <div class="row">
+                    <label>Source name</label>
+                    <input type="text" id="source" placeholder="e.g. Webcam" />
+                </div>
+                <button id="btn-connect">Connect</button>
+            </div>
+            <div class="status info" id="status">Not connected</div>
+        </div>
+
+        <div class="controls" id="controls">
+            <div class="filter-row">
+                <div class="param-label"><span>Active Filter</span></div>
+                <select id="filter">
+                    <option value="">-- loading --</option>
+                </select>
+            </div>
+            <div id="params">
+                <div style="font-size:0.78rem;color:#555;padding:10px 0;">Select a filter to load its parameters.</div>
+            </div>
+        </div>
+
+        <script>
+            const STORE_KEY = 'obs_rgb_split_cfg';
+            function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch { return {}; } }
+            function save(patch) { localStorage.setItem(STORE_KEY, JSON.stringify(Object.assign({}, load(), patch))); }
+
+            (function () {
+                var s = load();
+                if (s.host) document.getElementById('host').value = s.host;
+                if (s.port) document.getElementById('port').value = s.port;
+                if (s.password) document.getElementById('password').value = s.password;
+                if (s.source) document.getElementById('source').value = s.source;
+            })();
+
+            var connBody = document.getElementById('conn-body');
+            var toggleConn = document.getElementById('toggle-conn');
+            toggleConn.addEventListener('click', function () {
+                var open = connBody.style.display !== 'none';
+                connBody.style.display = open ? 'none' : '';
+                toggleConn.innerHTML = open ? '&#9654; Settings' : '&#9660; Settings';
+            });
+
+            async function sha256b64(str) {
+                var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+                return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
+            }
+            async function buildAuth(pw, salt, challenge) {
+                return sha256b64(await sha256b64(pw + salt) + challenge);
+            }
+
+            var ws = null;
+            var msgId = 1;
+            var pending = {};
+
+            var statusEl = document.getElementById('status');
+            var btnConn = document.getElementById('btn-connect');
+            var controlsEl = document.getElementById('controls');
+            var filterSel = document.getElementById('filter');
+
+            function setStatus(msg, type) { statusEl.textContent = msg; statusEl.className = 'status ' + (type || 'info'); }
+            function getSource() { return document.getElementById('source').value.trim(); }
+            function getFilter() { return filterSel.value; }
+
+            function loadFilters() {
+                var src = getSource();
+                if (!ws || ws.readyState !== WebSocket.OPEN || !src) return;
+                var id = String(msgId++);
+                ws.send(JSON.stringify({ op: 6, d: { requestType: 'GetSourceFilterList', requestId: id, requestData: { sourceName: src } } }));
+                pending[id] = function (data) {
+                    var savedFilter = load().filter || '';
+                    filterSel.innerHTML = '';
+                    (data.filters || []).forEach(function (f) {
+                        var opt = document.createElement('option');
+                        opt.value = f.filterName;
+                        opt.textContent = f.filterName;
+                        if (f.filterName === savedFilter) opt.selected = true;
+                        filterSel.appendChild(opt);
+                    });
+                    if (!filterSel.options.length)
+                        filterSel.innerHTML = '<option value="">-- no filters found --</option>';
+                    setStatus('Connected  ×  ' + src, 'ok');
+                    if (filterSel.value) fetchFilterSettings();
+                };
+            }
+
+            function connect() {
+                if (ws) { ws.close(); ws = null; }
+                var host = document.getElementById('host').value.trim();
+                var port = document.getElementById('port').value.trim();
+                var pwd = document.getElementById('password').value;
+                var src = getSource();
+                if (!src) { setStatus('Please enter a source name.', 'err'); return; }
+                save({ host: host, port: port, password: pwd, source: src });
+                setStatus('Connecting ...', 'info');
+                btnConn.disabled = true;
+                ws = new WebSocket('ws://' + host + ':' + port);
+                ws.onopen = function () { setStatus('Handshake ...', 'info'); };
+                ws.onmessage = async function (evt) {
+                    var msg = JSON.parse(evt.data);
+                    if (msg.op === 0) {
+                        var identify = { op: 1, d: { rpcVersion: 1 } };
+                        if (msg.d.authentication) {
+                            var s = msg.d.authentication;
+                            identify.d.authentication = await buildAuth(pwd, s.salt, s.challenge);
+                        }
+                        ws.send(JSON.stringify(identify));
+                    }
+                    if (msg.op === 2) {
+                        btnConn.disabled = false;
+                        controlsEl.style.display = 'block';
+                        connBody.style.display = 'none';
+                        toggleConn.innerHTML = '&#9654; Settings';
+                        loadFilters();
+                    }
+                    if (msg.op === 7 && pending[msg.d.requestId]) {
+                        pending[msg.d.requestId](msg.d.responseData);
+                        delete pending[msg.d.requestId];
+                    }
+                };
+                ws.onerror = function () { setStatus('Connection error — is OBS WebSocket active?', 'err'); btnConn.disabled = false; };
+                ws.onclose = function () {
+                    if (!statusEl.classList.contains('err')) setStatus('Disconnected', 'info');
+                    btnConn.disabled = false;
+                    controlsEl.style.display = 'none';
+                    connBody.style.display = '';
+                    toggleConn.innerHTML = '&#9660; Settings';
+                };
+            }
+
+            btnConn.addEventListener('click', connect);
+            filterSel.addEventListener('change', function () {
+                save({ filter: filterSel.value });
+                document.getElementById('params').innerHTML = '<div style="font-size:0.78rem;color:#555;padding:10px 0;">Lade Parameter ...</div>';
+                fetchFilterSettings();
+            });
+            if (load().source) connect();
+
+            function fetchFilterSettings() {
+                var f = getFilter();
+                var s = getSource();
+                if (!ws || ws.readyState !== WebSocket.OPEN || !f || !s) return;
+                var id = String(msgId++);
+                ws.send(JSON.stringify({ op: 6, d: { requestType: 'GetSourceFilter', requestId: id, requestData: { sourceName: s, filterName: f } } }));
+                pending[id] = function (data) {
+                    var obsSettings = (data && data.filterSettings) ? data.filterSettings : {};
+                    buildSliders(obsSettings);
+                };
+            }
+
+            function humanLabel(key) {
+                return key.replace(/_/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+            }
+
+            function buildSliders(obsSettings) {
+                var container = document.getElementById('params');
+                container.innerHTML = '';
+                var hasNum = false;
+                var keys = Object.keys(obsSettings).sort(function (a, b) {
+                    if (a === 'enabled') return -1;
+                    if (b === 'enabled') return 1;
+                    return 0;
+                });
+                keys.forEach(function (key) {
+                    var val = obsSettings[key];
+                    if (typeof val !== 'number') return;
+                    hasNum = true;
+                    var row = document.createElement('div');
+                    row.className = 'knob-row';
+
+                    // Boolean toggle: key is "enabled" or value is strictly 0 or 1
+                    if (key === 'enabled' || val === 0 || val === 1) {
+                        var checked = val === 1 ? 'checked' : '';
+                        row.innerHTML =
+                            '<div class="toggle-row">' +
+                            '<label class="toggle"><input type="checkbox" id="p-' + key + '" ' + checked + '><span class="toggle-slider"></span></label>' +
+                            '<span class="toggle-label">' + humanLabel(key) + '</span>' +
+                            '</div>';
+                        container.appendChild(row);
+                        (function (k) {
+                            row.querySelector('input').addEventListener('change', function () {
+                                sendSetting(k, this.checked ? 1 : 0);
+                            });
+                        })(key);
+                        return;
+                    }
+
+                    // Numeric slider
+                    var isInt = Number.isInteger(val);
+                    var min = 0, max = isInt ? 100 : 1, step = isInt ? 1 : 0.001;
+                    var clamped = Math.min(Math.max(val, min), max);
+                    row.innerHTML =
+                        '<div class="param-label"><span>' + humanLabel(key) + '</span><span class="val" id="v-' + key + '">' + val + '</span></div>' +
+                        '<input type="range" id="p-' + key + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + clamped + '" />';
+                    container.appendChild(row);
+                    (function (k, intParam) {
+                        row.querySelector('input').addEventListener('input', function () {
+                            document.getElementById('v-' + k).textContent = this.value;
+                            sendSetting(k, intParam ? parseInt(this.value, 10) : parseFloat(this.value));
+                        });
+                    })(key, isInt);
+                });
+                if (!hasNum) container.innerHTML = '<div style="font-size:0.78rem;color:#555;padding:10px 0;">No parameters — adjust any value once in OBS to initialize them.</div>';
+            }
+
+            function sendSetting(key, value) {
+                var f = getFilter();
+                var s = getSource();
+                if (!ws || ws.readyState !== WebSocket.OPEN || !f || !s) return;
+                ws.send(JSON.stringify({
+                    op: 6, d: {
+                        requestType: 'SetSourceFilterSettings',
+                        requestId: String(msgId++),
+                        requestData: { sourceName: s, filterName: f, filterSettings: { [key]: value }, overlay: true }
+                    }
+                }));
+            }
+        </script>
+    </body>
+
+</html>
